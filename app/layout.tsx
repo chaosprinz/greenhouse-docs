@@ -23,12 +23,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full m-0`}
       >
-        {children}
+
+        <div className="flex flex-col min-h-full font-mono">
+          <h1 className="font-bold text-3xl text-center bg-emerald-600">Greenhouse</h1>
+      
+          <main className="flex flex-1 mt-4 justify-center">
+            <div className="w-1/3 pl-6 pr-6">{children}</div>
+          </main>
+      
+          <footer className="mb-4 text-center text-sm">
+            powered by <b>NextJS</b> and <b>DrizzleORM</b>
+          </footer>
+        </div>
+
       </body>
     </html>
   );
-}
+};
