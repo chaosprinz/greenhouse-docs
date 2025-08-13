@@ -8,6 +8,27 @@
       "when": 1754829880152,
       "tag": "0000_worthless_photon",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1755072208028,
+      "tag": "0001_cuddly_tombstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1755079162674,
+      "tag": "0002_cold_black_tom",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1755079590263,
+      "tag": "0003_conscious_spot",
+      "breakpoints": true
     }
   ]
 }

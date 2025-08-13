@@ -1,20 +1,19 @@
-import db from "@/db"
-import { grows } from "@/db/schema"
-import { InferSelectModel } from "drizzle-orm"
-import Link from "next/link"
+import Link from "next/link";
+import { getGrowsWithGenetic, GrowWithGenetic } from "@/lib/grows";
 
-const GrowItem = (grow: InferSelectModel<typeof grows>) => {
+const GrowItem = (grow: GrowWithGenetic) => {
     return (
         <li key={grow.id} className="list-disc">
             <Link href={`/grows/${grow.id}`}>
-                {grow.genetic}
+                {grow.genetic?.name}
             </Link>
         </li>
     )
 }
 
 export default async function Grows() {
-    const growsData = await db.query.grows.findMany()
+    const growsData = await getGrowsWithGenetic()
+
     return (
         <div>
             <pre className="border-amber-400 border-2 p-6 mb-5">

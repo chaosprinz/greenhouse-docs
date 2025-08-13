@@ -26,12 +26,13 @@ export default async function Grow({
         where: eq(grows.id, (await params).growId),
         with: {
             measurings: true,
-        }
-    })
+            genetic: true,
+        },
+    });
     
     return (
         <div>
-            <h2 className="text-xl text-center border-b-2 border-amber-50 mb-4">{growData?.genetic}</h2>
+            <h2 className="text-xl text-center border-b-2 border-amber-50 mb-4">{growData?.genetic?.name}</h2>
             <h3 >Measurings</h3>
             <ul>
                 {growData?.measurings.map(MeasuringItem)}

@@ -3,18 +3,27 @@ import { timestamp, int, mysqlTable, serial, varchar } from 'drizzle-orm/mysql-c
 
 export const grows = mysqlTable('grows', {
     id: int().autoincrement().notNull().primaryKey(),
-    genetic: varchar({ length: 255 }).notNull(),    
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at').defaultNow(),
+    startedAt: timestamp('started_at'),
+    floweringInitAt: timestamp('flowering_init_at'),
+    floweringStartedAt: timestamp('flowering_started_at'),
+    geneticId: int('genetic_id')
+        .references(() => genetics.id, { onDelete: 'set null'}),
 });
 
-export const growsRelations = relations(grows, ({ many }) => ({
+export const growsRelations = relations(grows, ({ many,one }) => ({
     measurings: many(measurings),
+    genetic: one(genetics, {
+        fields: [grows.geneticId],
+        references: [genetics.id],
+    }),
 }));
 
 export const measurings = mysqlTable('measurerings', {
     id: int().autoincrement().notNull().primaryKey(),
     temperature: int().notNull(),
     humidity: int().notNull(),
-    image: varchar({ length: 255 }),
     created_at: timestamp().defaultNow(),
     growId: int('grow_id')
         .references(() => grows.id, { onDelete: 'cascade'})
@@ -24,6 +33,19 @@ export const measurings = mysqlTable('measurerings', {
 export const measuringRelations = relations(measurings, ({ one }) => ({
     grow: one(grows, {
         fields: [measurings.growId],
-        references: [grows.id]
+        references: [grows.id],
     }),
+}));
+
+export const genetics = mysqlTable('genetics', {
+    id: int().autoincrement().notNull().primaryKey(),
+    name: varchar({ length: 255 }).notNull(),
+    breeder: varchar({ length: 255 }).notNull(),
+    genus: varchar({ length: 255 }).notNull(),
+    type: varchar({ length: 255 }).notNull(),
+    productPage: varchar('product_page', { length: 255 }),
+});
+
+export const geneticRelations = relations(genetics, ({ many}) => ({
+    grows: many(grows),
 }));
