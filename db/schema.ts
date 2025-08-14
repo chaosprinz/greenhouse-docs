@@ -20,11 +20,11 @@ export const growsRelations = relations(grows, ({ many,one }) => ({
     }),
 }));
 
-export const measurings = mysqlTable('measurerings', {
+export const measurings = mysqlTable('measurings', {
     id: int().autoincrement().notNull().primaryKey(),
     temperature: int().notNull(),
     humidity: int().notNull(),
-    created_at: timestamp().defaultNow(),
+    createdAt: timestamp('created_at').defaultNow().onUpdateNow().notNull(),
     growId: int('grow_id')
         .references(() => grows.id, { onDelete: 'cascade'})
         .notNull(),

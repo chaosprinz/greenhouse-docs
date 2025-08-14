@@ -3,12 +3,12 @@ import { grows, measurings } from "@/db/schema";
 import { eq, InferSelectModel } from "drizzle-orm";
 
 function MeasuringItem(measuring: InferSelectModel<typeof measurings>) {
-    const creation_date = measuring.created_at?.toLocaleDateString();
-    const creation_time = measuring.created_at?.toLocaleTimeString();
+    const creationDate = measuring.createdAt?.toLocaleDateString();
+    const creationTime = measuring.createdAt?.toLocaleTimeString();
 
     return (
         <li key={measuring.id} className="mt-3 list-disc">
-            <h3 className="text-sm">created at: {creation_date} {creation_time}</h3>
+            <h3 className="text-sm">created at: {creationDate} {creationTime}</h3>
             <div>
                 <p>temperature: {measuring.temperature}</p>
                 <p>humidity: {measuring.humidity}</p>
