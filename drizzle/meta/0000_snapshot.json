@@ -1,9 +1,68 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "050145a5-f131-414c-91c6-28f6bb1058ed",
+  "id": "110c1757-9b1a-4ef7-97e4-5b3741891b28",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "genetics": {
+      "name": "genetics",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "breeder": {
+          "name": "breeder",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "genus": {
+          "name": "genus",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "product_page": {
+          "name": "product_page",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "genetics_id": {
+          "name": "genetics_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
     "grows": {
       "name": "grows",
       "columns": {
@@ -14,16 +73,67 @@
           "notNull": true,
           "autoincrement": true
         },
-        "genetic": {
-          "name": "genetic",
-          "type": "varchar(255)",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "flowering_init_at": {
+          "name": "flowering_init_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "flowering_started_at": {
+          "name": "flowering_started_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "genetic_id": {
+          "name": "genetic_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "grows_genetic_id_genetics_id_fk": {
+          "name": "grows_genetic_id_genetics_id_fk",
+          "tableFrom": "grows",
+          "tableTo": "genetics",
+          "columnsFrom": [
+            "genetic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {
         "grows_id": {
           "name": "grows_id",
@@ -35,8 +145,8 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "measurerings": {
-      "name": "measurerings",
+    "measurings": {
+      "name": "measurings",
       "columns": {
         "id": {
           "name": "id",
@@ -59,19 +169,13 @@
           "notNull": true,
           "autoincrement": false
         },
-        "image": {
-          "name": "image",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
+          "onUpdate": true,
           "default": "(now())"
         },
         "grow_id": {
@@ -84,9 +188,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "measurerings_grow_id_grows_id_fk": {
-          "name": "measurerings_grow_id_grows_id_fk",
-          "tableFrom": "measurerings",
+        "measurings_grow_id_grows_id_fk": {
+          "name": "measurings_grow_id_grows_id_fk",
+          "tableFrom": "measurings",
           "tableTo": "grows",
           "columnsFrom": [
             "grow_id"
@@ -99,8 +203,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "measurerings_id": {
-          "name": "measurerings_id",
+        "measurings_id": {
+          "name": "measurings_id",
           "columns": [
             "id"
           ]
