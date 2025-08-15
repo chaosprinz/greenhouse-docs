@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm';
+import { InferSelectModel, relations } from 'drizzle-orm';
 import { timestamp, int, mysqlTable, serial, varchar } from 'drizzle-orm/mysql-core';
 
 export const grows = mysqlTable('grows', {
@@ -29,6 +29,8 @@ export const measurings = mysqlTable('measurings', {
         .references(() => grows.id, { onDelete: 'cascade'})
         .notNull(),
 });
+
+export type Measuring = InferSelectModel<typeof measurings>
 
 export const measuringRelations = relations(measurings, ({ one }) => ({
     grow: one(grows, {
