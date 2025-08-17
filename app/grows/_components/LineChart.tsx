@@ -1,4 +1,5 @@
 'use client'
+
 import {
     Chart as ChartJS,
     TimeScale,
@@ -50,7 +51,7 @@ export default function LineChart<T extends { createdAt: Date}>({
         borderColor,
         valueKey
     })
-    
+
     return (
         <div className={className ?? 'h-80 w-full'}>
             <Line data={data} options={options} />

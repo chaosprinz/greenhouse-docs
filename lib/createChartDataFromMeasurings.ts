@@ -1,8 +1,4 @@
-import { Measuring } from "@/db/schema";
 import type { ChartData, ChartOptions } from "chart.js";
-
-type TemperatureData = { createdAt: Date; temperature: number;};
-type HumidityData = { createdAt: Date; humidity: number;};
 
 type NumericKeys<T> = {
     [K in keyof T]: T[K] extends number ? K : never;
