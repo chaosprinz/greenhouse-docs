@@ -1,19 +1,23 @@
 import db from "@/db";
-import { grows, measurings } from "@/db/schema";
-import { eq, InferSelectModel } from "drizzle-orm";
+import { grows, Measuring} from "@/db/schema";
+import { eq } from "drizzle-orm";
+import LineChart from "../_components/LineChart";
 
-function MeasuringItem(measuring: InferSelectModel<typeof measurings>) {
+type TemperatureData = { createdAt: Date; temperature: number;};
+type HumidityData = { createdAt: Date; humidity: number;};
+
+function MeasuringItem({measuring}: {measuring: Measuring}) {
     const creationDate = measuring.createdAt?.toLocaleDateString();
     const creationTime = measuring.createdAt?.toLocaleTimeString();
 
     return (
-        <li key={measuring.id} className="mt-3 list-disc">
+        <div className="mt-3 list-disc">
             <h3 className="text-sm">created at: {creationDate} {creationTime}</h3>
             <div>
                 <p>temperature: {measuring.temperature}</p>
                 <p>humidity: {measuring.humidity}</p>
             </div>
-        </li>
+        </div>
     )
 }
 
@@ -29,14 +33,49 @@ export default async function Grow({
             genetic: true,
         },
     });
-    
+
+    const sortedMeasurings: Measuring[] = growData?.measurings
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()) ?? [] 
+
+    const temperatures: TemperatureData[] = sortedMeasurings.map(m => ({
+        createdAt: m.createdAt,
+        temperature: m.temperature
+    })) ?? [];
+
+    const humidities: HumidityData[] = sortedMeasurings.map(m => ({
+        createdAt: m.createdAt,
+        humidity: m.humidity,
+    }));
+
     return (
         <div>
             <h2 className="text-xl text-center border-b-2 border-amber-50 mb-4">{growData?.genetic?.name}</h2>
-            <h3 >Measurings</h3>
-            <ul>
-                {growData?.measurings.map(MeasuringItem)}
-            </ul>
+            <div>
+                <h3 >Last Measuring</h3>
+                <MeasuringItem measuring={sortedMeasurings[0]} />
+            </div>
+
+            <div>
+                <h3>Measurings-chart</h3>
+                <LineChart 
+                    measurings={ temperatures } 
+                    yAxisId="yTemp" 
+                    valueKey="temperature" 
+                    label="Temperature"
+                    title="Temperatures over time"
+                    units="°C"
+                />
+
+                <LineChart
+                    measurings={ humidities }
+                    yAxisId="yHumidity"
+                    valueKey={ "humidity" }
+                    label="Humidity"
+                    title="Humidity over time"
+                    units="%"
+                    borderColor="rgb(0, 0, 255)"
+                />
+            </div>
         </div>
     );
 };
