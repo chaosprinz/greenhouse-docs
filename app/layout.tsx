@@ -32,7 +32,7 @@ export default function RootLayout({
           <h1 className="font-bold text-3xl text-center bg-emerald-600">Greenhouse</h1>
       
           <main className="flex flex-1 mt-4 justify-center">
-            <div className="w-1/3 pl-6 pr-6">{children}</div>
+            <div className="w-4/5 pl-6 pr-6">{children}</div>
           </main>
       
           <footer className="mb-4 text-center text-sm">
