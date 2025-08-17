@@ -10,7 +10,8 @@
     "lint": "next lint",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "seed": "tsx scripts/seedings/measuring_for_1.ts"
   },
   "dependencies": {
     "chart.js": "^4.5.0",
