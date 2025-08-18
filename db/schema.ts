@@ -48,6 +48,8 @@ export const genetics = mysqlTable('genetics', {
     productPage: varchar('product_page', { length: 255 }),
 });
 
+export type Genetic = InferSelectModel<typeof genetics>
+
 export const geneticRelations = relations(genetics, ({ many}) => ({
     grows: many(grows),
 }));

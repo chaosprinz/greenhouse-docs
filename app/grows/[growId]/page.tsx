@@ -1,12 +1,9 @@
 import db from "@/db";
-import { grows, Measuring} from "@/db/schema";
+import { grows, Measuring } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import LineChart from "../_components/LineChart";
-import Link from "next/link";
-import { Url } from "next/dist/shared/lib/router/router";
-
-type TemperatureData = { createdAt: Date; temperature: number;};
-type HumidityData = { createdAt: Date; humidity: number;};
+import Genetic from "./_components/Genetic";
+import { H2, H3 } from "@/app/_components/designElements";
+import MeasuringCharts from "./_components/MeasuringCharts";
 
 function MeasuringItem({measuring}: {measuring: Measuring}) {
     const creationDate = measuring.createdAt?.toLocaleDateString();
@@ -37,68 +34,24 @@ export default async function Grow({
     const sortedMeasurings: Measuring[] = growData?.measurings
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()) ?? [] 
 
-    const temperatures: TemperatureData[] = sortedMeasurings.map(m => ({
-        createdAt: m.createdAt,
-        temperature: m.temperature
-    })) ?? [];
-
-    const humidities: HumidityData[] = sortedMeasurings.map(m => ({
-        createdAt: m.createdAt,
-        humidity: m.humidity,
-    }));
-
     return (
         <div className="pt-3 text-sm">
-            <h2 className="text-xl text-center border-b-2 border-amber-50 mb-4">{growData?.genetic?.name}</h2>
+            <H2>{growData?.genetic?.name}</H2>
             <div className="grid grid-cols-2">
                 <div>
-                    <div>
-                        <h3 className="pl-6 pb-2 font-bold text-base">Genetic</h3>
-                        <div>
-                            <p>Name: {growData?.genetic?.name}</p>
-                            <p>Breeder: {growData?.genetic?.breeder}</p>
-                            <p>Genus: {growData?.genetic?.genus}</p>
-                            <p>Type: {growData?.genetic?.type}</p>
-                            <p className="mt-3">
-                                <Link 
-                                    href={growData?.genetic?.productPage as Url} 
-                                    className="text-blue-400 hover:underline hover:text-blue-600 text-base"
-                                    target="blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Link to Product-page
-                                </Link>
-                            </p>
-                        </div>
-                    </div>
+                    { growData?.genetic && <Genetic genetic={growData.genetic} /> };
                 </div>
                 <div>
-                    <div>
-                        <h3 className="pl-6 pb-2 font-bold text-base">Last Measuring</h3>
-                        <MeasuringItem measuring={sortedMeasurings[0]} />
-                    </div>
-
-                    <div className="mt-5">
-                        <h3 className="pl-6 pb-2 font-bold text-base">Measurings-chart</h3>
-                        <LineChart 
-                            measurings={ temperatures } 
-                            yAxisId="yTemp" 
-                            valueKey="temperature" 
-                            label="Temperature"
-                            title="Temperatures over time"
-                            units="°C"
-                        />
-
-                        <LineChart
-                            measurings={ humidities }
-                            yAxisId="yHumidity"
-                            valueKey={ "humidity" }
-                            label="Humidity"
-                            title="Humidity over time"
-                            units="%"
-                            borderColor="rgb(0, 0, 255)"
-                        />
-                    </div>
+                    { growData?.measurings && (
+                        <>
+                            <div>
+                                <H3>Last Measuring</H3>
+                                <MeasuringItem measuring={sortedMeasurings[0]} />
+                            </div>
+                            <MeasuringCharts measurings={sortedMeasurings} />
+                        </>
+                    )}
+                    
                 </div>
             </div>
         </div>
