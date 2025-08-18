@@ -11,7 +11,10 @@
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "seed": "tsx scripts/seedings/measuring_for_1.ts"
+    "seed": "tsx scripts/seedings/measuring_for_1.ts",
+    "format": "prettier --write .",
+    "lint:fix": "eslint . --ext .js,.ts,.tsx --fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "chart.js": "^4.5.0",
@@ -41,5 +44,14 @@
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss}": [
+      "prettier --write"
+    ]
   }
 }
