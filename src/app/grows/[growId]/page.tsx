@@ -42,9 +42,7 @@ export default async function Grow({
     <div className="pt-3 text-sm">
       <H2>{growData?.genetic?.name}</H2>
       <div className="grid grid-cols-2">
-        <div>
-          {growData?.genetic && <Genetic genetic={growData.genetic} />};
-        </div>
+        <div>{growData?.genetic && <Genetic genetic={growData.genetic} />}</div>
         <div>
           {growData?.measurings && (
             <>
