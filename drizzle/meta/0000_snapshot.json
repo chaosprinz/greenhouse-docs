@@ -55,9 +55,7 @@
       "compositePrimaryKeys": {
         "genetics_id": {
           "name": "genetics_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -124,12 +122,8 @@
           "name": "grows_genetic_id_genetics_id_fk",
           "tableFrom": "grows",
           "tableTo": "genetics",
-          "columnsFrom": [
-            "genetic_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["genetic_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -137,9 +131,7 @@
       "compositePrimaryKeys": {
         "grows_id": {
           "name": "grows_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -192,12 +184,8 @@
           "name": "measurings_grow_id_grows_id_fk",
           "tableFrom": "measurings",
           "tableTo": "grows",
-          "columnsFrom": [
-            "grow_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["grow_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -205,9 +193,7 @@
       "compositePrimaryKeys": {
         "measurings_id": {
           "name": "measurings_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},

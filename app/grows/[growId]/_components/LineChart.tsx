@@ -1,60 +1,62 @@
-'use client'
+"use client";
 
 import {
-    Chart as ChartJS,
-    TimeScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-    Legend,
-    Title,
-    Filler
-} from 'chart.js';
+  Chart as ChartJS,
+  TimeScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+  Title,
+  Filler,
+} from "chart.js";
 
-import { Line } from 'react-chartjs-2';
-import { createChartDataFromMeasurings } from '@/lib/createChartDataFromMeasurings';
+import { Line } from "react-chartjs-2";
+import { createChartDataFromMeasurings } from "@/lib/createChartDataFromMeasurings";
 
-import 'chartjs-adapter-date-fns';
+import "chartjs-adapter-date-fns";
 
-import type { ChartDataProps } from '@/lib/createChartDataFromMeasurings';
+import type { ChartDataProps } from "@/lib/createChartDataFromMeasurings";
 
 ChartJS.register(
-    TimeScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-    Legend,
-    Title,
-    Filler
+  TimeScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+  Title,
+  Filler
 );
 
-type LineChartProps<T extends { createdAt: Date}> = ChartDataProps<T> & { className?: string}
+type LineChartProps<T extends { createdAt: Date }> = ChartDataProps<T> & {
+  className?: string;
+};
 
-export default function LineChart<T extends { createdAt: Date}>({ 
-    measurings, 
-    yAxisId, 
-    label, 
+export default function LineChart<T extends { createdAt: Date }>({
+  measurings,
+  yAxisId,
+  label,
+  title,
+  units,
+  valueKey,
+  borderColor,
+  className,
+}: LineChartProps<T>) {
+  const { data, options } = createChartDataFromMeasurings({
+    measurings,
+    yAxisId,
+    label,
     title,
     units,
-    valueKey,
     borderColor,
-    className 
-}: LineChartProps<T>) {
-    const { data, options } = createChartDataFromMeasurings({
-        measurings,
-        yAxisId,
-        label,
-        title,
-        units,
-        borderColor,
-        valueKey
-    })
+    valueKey,
+  });
 
-    return (
-        <div className={className ?? 'h-80 w-full'}>
-            <Line data={data} options={options} />
-        </div>
-    );
-};
+  return (
+    <div className={className ?? "h-80 w-full"}>
+      <Line data={data} options={options} />
+    </div>
+  );
+}

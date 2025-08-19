@@ -3,7 +3,7 @@ import { measurings } from "@/db/schema";
 import { addMinutes, subHours } from "date-fns";
 
 async function seedMeasurings() {
-  const { default: db} = await import("../../db")
+  const { default: db } = await import("../../db");
   const now = new Date();
   const tenHoursAgo = subHours(now, 10);
 
@@ -14,7 +14,7 @@ async function seedMeasurings() {
 
     return {
       temperature: Math.floor(20 + Math.random() * 5), // 20-25°C
-      humidity: Math.floor(40 + Math.random() * 20),  // 40-60%
+      humidity: Math.floor(40 + Math.random() * 20), // 40-60%
       createdAt, // explicitly set to avoid default NOW()
       growId: 1, // Change to your grow ID
     };
@@ -22,6 +22,7 @@ async function seedMeasurings() {
 
   await db.insert(measurings).values(data);
 
+  // eslint-disable-next-line no-console
   console.log(`✅ Inserted ${data.length} dummy measurings`);
 }
 
