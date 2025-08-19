@@ -29,7 +29,7 @@ export default function RootLayout({
       >
         <div className="flex flex-col min-h-full font-mono">
           <h1 className="font-bold text-3xl text-center bg-emerald-600">
-            Greenhouse
+            Greenhouse-Docs
           </h1>
 
           <main className="flex flex-1 mt-4 justify-center">
