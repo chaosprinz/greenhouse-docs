@@ -1,6 +1,15 @@
 import { InferSelectModel, relations } from "drizzle-orm";
-import { timestamp, int, mysqlTable, varchar } from "drizzle-orm/mysql-core";
+import {
+  timestamp,
+  int,
+  mysqlTable,
+  varchar,
+  text,
+} from "drizzle-orm/mysql-core";
 
+/***
+ * # grow
+ */
 export const grows = mysqlTable("grows", {
   id: int().autoincrement().notNull().primaryKey(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -19,8 +28,12 @@ export const growsRelations = relations(grows, ({ many, one }) => ({
     fields: [grows.geneticId],
     references: [genetics.id],
   }),
+  imageUploads: many(imageUploads),
 }));
 
+/***
+ * Measurings
+ */
 export const measurings = mysqlTable("measurings", {
   id: int().autoincrement().notNull().primaryKey(),
   temperature: int().notNull(),
@@ -40,6 +53,9 @@ export const measuringRelations = relations(measurings, ({ one }) => ({
   }),
 }));
 
+/***
+ * Genetics
+ */
 export const genetics = mysqlTable("genetics", {
   id: int().autoincrement().notNull().primaryKey(),
   name: varchar({ length: 255 }).notNull(),
@@ -53,4 +69,22 @@ export type Genetic = InferSelectModel<typeof genetics>;
 
 export const geneticRelations = relations(genetics, ({ many }) => ({
   grows: many(grows),
+}));
+
+/***
+ * ImageUploads
+ */
+export const imageUploads = mysqlTable("image_uploads", {
+  id: int().autoincrement().notNull().primaryKey(),
+  description: text(),
+  path: varchar("path", { length: 255 }).notNull().unique(),
+  growId: int("grow_id")
+    .notNull()
+    .references(() => grows.id),
+});
+
+export type ImageUpload = InferSelectModel<typeof imageUploads>;
+
+export const imageUploadRelations = relations(imageUploads, ({ one }) => ({
+  grow: one(grows),
 }));

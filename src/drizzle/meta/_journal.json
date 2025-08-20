@@ -8,6 +8,20 @@
       "when": 1755263110684,
       "tag": "0000_last_imperial_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1755728126361,
+      "tag": "0001_needy_swarm",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1755732279375,
+      "tag": "0002_rainy_fallen_one",
+      "breakpoints": true
     }
   ]
 }

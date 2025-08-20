@@ -1,0 +1,1 @@
+ALTER TABLE `image_uploads` MODIFY COLUMN `description` text;
