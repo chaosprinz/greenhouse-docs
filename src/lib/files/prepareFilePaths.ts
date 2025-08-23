@@ -1,5 +1,6 @@
 import path from "path";
 import generateSafeFilename from "./generateSafeFilename";
+import CONFIG from "@/lib/config";
 
 export type PreparedFilePaths = {
   uploadDir: string;
@@ -12,12 +13,7 @@ export default function prepareFilePaths(
   originalName: string,
   uploadDirName: string
 ): PreparedFilePaths {
-  const uploadDir = path.join(
-    process.cwd(),
-    "public",
-    "uploads",
-    uploadDirName
-  );
+  const uploadDir = path.join(CONFIG.files.uploadPath, uploadDirName);
   const uniqueName = generateSafeFilename(originalName);
   return {
     uploadDir,
