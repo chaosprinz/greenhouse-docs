@@ -77,7 +77,7 @@ export const geneticRelations = relations(genetics, ({ many }) => ({
 export const imageUploads = mysqlTable("image_uploads", {
   id: int().autoincrement().notNull().primaryKey(),
   description: text(),
-  path: varchar("path", { length: 255 }).notNull().unique(),
+  uniqueName: varchar({ length: 255 }).notNull().unique(),
   growId: int("grow_id")
     .notNull()
     .references(() => grows.id),

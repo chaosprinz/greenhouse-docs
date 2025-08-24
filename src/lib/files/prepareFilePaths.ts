@@ -5,7 +5,6 @@ import CONFIG from "@/lib/config";
 export type PreparedFilePaths = {
   uploadDir: string;
   uniqueName: string;
-  dbPath: string;
   fullPath: string;
 };
 
@@ -18,7 +17,6 @@ export default function prepareFilePaths(
   return {
     uploadDir,
     uniqueName,
-    dbPath: `/${uploadDirName}/${uniqueName}`,
     fullPath: path.join(uploadDir, uniqueName),
   };
 }
