@@ -54,7 +54,7 @@ export async function insertImageToDb(values: {
  */
 export type WriteFileResult = {
   succeeded: boolean;
-  error?: unknown;
+  msg?: unknown;
 };
 
 export async function writeFileToDisk(
@@ -67,12 +67,13 @@ export async function writeFileToDisk(
     await writeFile(path, bytes);
     return {
       succeeded: true,
+      msg: { path },
     };
   } catch (error) {
     await db.delete(imageUploads).where(eq(imageUploads.id, dbResult.id));
     return {
       succeeded: false,
-      error,
+      msg: { error },
     };
   }
 }
@@ -161,31 +162,58 @@ export async function createResponse({
   return createWriteFileResponse(writeFileResult, {
     insertId: dbResult.id,
     imagePath: fullPath,
+    description: description ? description : "",
   });
 }
 
 /**
- *
+ * ## async createWriteFileResponse(writeFileResult) => NextResponse
  * @param writeFileResult WriteFileResult result of writting the file to disk
- * @param param1
- * @returns
+ * @param {
+ *  insertId: number,
+ *  imagePath: string,
+ * }
+ * @returns a promise for a NextResponse suited for the given WriteFileResult
  */
 async function createWriteFileResponse(
   writeFileResult: WriteFileResult,
-  { insertId, imagePath }: { insertId: number; imagePath: string }
+  {
+    insertId,
+    imagePath,
+    description,
+  }: { insertId: number; imagePath: string; description?: string }
 ): Promise<NextResponse> {
   if (!writeFileResult.succeeded) {
     return createErrorResponse({
       error: "Could not write file to disk",
-      msg: writeFileResult.error,
+      msg: writeFileResult.msg,
       status: 500,
     });
   }
-  return NextResponse.json({
+
+  const responseData = {
     insertId,
     imagePath,
-  });
+    description: description ? description : "",
+  };
+
+  return NextResponse.json(responseData, { status: 400 });
 }
+
+/**
+ * ## createErrorResponse
+ * createErrorResponse({
+ *  error, msg, status
+ * }) => NextResponse
+ *
+ * creates a standarized error-msg as NextResponse.json
+ * @param {
+ *  error: string,
+ *  msg: unknown,
+ *  status: number,
+ * }
+ * @returns NextResponse with an error message from the given parameter
+ */
 function createErrorResponse({
   error,
   msg,
