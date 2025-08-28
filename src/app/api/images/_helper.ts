@@ -1,7 +1,7 @@
 import db from "@/db";
 import { imageUploads } from "@/db/schema";
 import prepareFilePaths from "@/lib/files/prepareFilePaths";
-import { growExists } from "@/lib/grows";
+import { growExists } from "@/lib/data/grows";
 import { eq } from "drizzle-orm";
 import { mkdir, writeFile } from "fs/promises";
 import { NextResponse } from "next/server";

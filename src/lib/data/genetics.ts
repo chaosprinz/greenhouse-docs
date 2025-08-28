@@ -1,5 +1,5 @@
 import db from "@/db";
-import { genetics } from "@/db/schema";
+import { Genetic, genetics } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export type GeneticWithGrowsProps = {
@@ -25,4 +25,33 @@ export async function getGeneticsWithGrows({}: GeneticWithGrowsProps): Promise<G
     with: { grows: true },
   });
   return genetics;
+}
+
+export async function getGenetics(): Promise<Genetic[]> {
+  const genetics: Genetic[] = await db.query.genetics.findMany();
+  return genetics;
+}
+
+export type GeneticInput = {
+  name: string;
+  breeder: string;
+  genus: string;
+  type: string;
+  productPage?: string;
+};
+
+export type GeneticInsertResult = {
+  insertIds: number[];
+  insertData: GeneticInput;
+};
+export async function createGenetic(
+  GeneticData: GeneticInput
+): Promise<GeneticInsertResult> {
+  const result = await db.insert(genetics).values(GeneticData).$returningId();
+  const insertIds: number[] = result.map((entry) => entry.id);
+  const insertData: GeneticInput = GeneticData;
+  return {
+    insertIds,
+    insertData,
+  };
 }

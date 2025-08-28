@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getGrowsWithGenetic, GrowWithGenetic } from "@/lib/grows";
+import { getGrowsWithGenetic, GrowWithGenetic } from "@/lib/data/grows";
 
 const GrowItem = (grow: GrowWithGenetic) => {
   return (
