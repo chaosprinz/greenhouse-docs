@@ -44,10 +44,11 @@ export default async function Grow({
       <div className="grid grid-cols-2">
         <div>{growData?.genetic && <Genetic genetic={growData.genetic} />}</div>
         <div>
-          {growData?.measurings && (
+          {growData?.measurings && growData.measurings.length > 0 && (
             <>
               <div>
                 <H3>Last Measuring</H3>
+
                 <MeasuringItem measuring={sortedMeasurings[0]} />
               </div>
               <MeasuringCharts measurings={sortedMeasurings} />
