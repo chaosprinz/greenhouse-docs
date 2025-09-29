@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { DbError } from "../data";
+import { errorData } from "../data/errors/types";
 
 export type ApiResponseData<T = unknown> = {
   success: boolean;
@@ -9,7 +11,7 @@ export type ApiResponseData<T = unknown> = {
   data?: T;
 
   //success: false
-  error?: string;
+  error?: errorData;
   msg?: string;
   details?: T;
 };
@@ -21,15 +23,13 @@ export type ResponseProps<T = unknown> = {
   data?: T;
   details?: T;
   msg?: string;
-  error?: string;
+  error?: errorData;
 };
 
 export function createResponse<T>({
   success,
   status,
   data,
-  details,
-  msg,
   error,
   timestamp,
 }: ResponseProps<T>): NextResponse<ApiResponseData<T>> {
@@ -43,14 +43,8 @@ export function createResponse<T>({
     responseData.data = data;
   }
 
-  if (details) {
-    responseData.details = details;
-  }
   if (error) {
     responseData.error = error;
-  }
-  if (msg) {
-    responseData.msg = msg;
   }
 
   return NextResponse.json(responseData, { status });
