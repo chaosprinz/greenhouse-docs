@@ -1,10 +1,10 @@
-import { DbError } from "./errors";
+import { errorData } from "./errors/types";
 import { getGeneticWithGrows } from "./genetics";
 import { getGrowsWithGenetic } from "./grows";
 
 export type DbResult<T> =
   | { success: true; type: "ok"; data: T }
-  | { success: false; type: "error"; error: DbError };
+  | { success: false; type: "error"; error: errorData };
 
 export type GeneticWithGrowsProps = {
   id: number;
