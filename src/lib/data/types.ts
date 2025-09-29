@@ -1,18 +1,49 @@
+import { PgVarchar } from "drizzle-orm/pg-core";
 import { errorData } from "./errors/types";
-import { getGeneticWithGrows } from "./genetics";
-import { getGrowsWithGenetic } from "./grows";
+import { Grow as GrowSchema, Genetic as GeneticSchema } from "@/db/schema";
 
+/**
+ * ## DbResult
+ */
 export type DbResult<T> =
   | { success: true; type: "ok"; data: T }
   | { success: false; type: "error"; error: errorData };
 
-export type GeneticWithGrowsProps = {
-  id: number;
+/**
+ * ## Genetics
+ */
+
+export type Genetics = DbResult<GeneticSchema[]>;
+export type Genetic = DbResult<GeneticSchema>;
+
+export type GeneticIncludes = {
+  grows: true | undefined;
 };
 
-export type GeneticWithGrows = Awaited<ReturnType<typeof getGeneticWithGrows>>;
+export type GeneticInput = {
+  name: string;
+  breeder: string;
+  genus: string;
+  type: string;
+  productPage?: string;
+};
 
-export type GeneticsWithGrows = GeneticWithGrows[];
+/**
+ * ## Grows
+ */
 
-export type GrowsWithGenetic = Awaited<ReturnType<typeof getGrowsWithGenetic>>;
-export type GrowWithGenetic = GrowsWithGenetic[number];
+export type Grows = DbResult<GrowSchema[]>;
+export type Grow = DbResult<GrowSchema>;
+
+export type GrowIncludes = {
+  imageUploads: true | undefined;
+  genetic: true | undefined;
+  measurings: true | undefined;
+};
+
+export type GrowInput = {
+  geneticId: number;
+  createdAt?: number;
+};
+
+export type GrowCreated = DbResult<GrowSchema>;
