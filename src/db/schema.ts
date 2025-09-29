@@ -31,6 +31,8 @@ export const growsRelations = relations(grows, ({ many, one }) => ({
   imageUploads: many(imageUploads),
 }));
 
+export type Grow = InferSelectModel<typeof grows>;
+
 /***
  * Measurings
  */
