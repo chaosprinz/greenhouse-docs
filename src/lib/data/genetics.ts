@@ -41,7 +41,7 @@ export async function getGenetic(
 
 export async function createGenetic(
   input: GeneticInput,
-  includes: GeneticIncludes
+  includes?: GeneticIncludes
 ): Promise<Genetic> {
   const insertId = await db.insert(genetics).values(input).$returningId();
   const newGenetic = await db.query.genetics.findFirst({
