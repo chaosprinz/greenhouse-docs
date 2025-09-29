@@ -1,30 +1,26 @@
 import CONFIG from "@/lib/config";
 
-import db from "@/db";
-import { eq } from "drizzle-orm";
-import { imageUploads } from "@/db/schema";
-
 import path from "path";
 import { stat } from "fs/promises";
 import { createReadStream } from "fs";
 import lookupMime from "@/lib/files/lookupMime";
 
 import { NextRequest, NextResponse } from "next/server";
+import { getImage } from "@/lib/data";
 
 export async function GET(
   _req: NextRequest,
   { params }: { params: { id: number } }
 ) {
-  const image = await db.query.imageUploads.findFirst({
-    where: eq(imageUploads.id, (await params).id),
-  });
+  const image = await getImage((await params).id);
 
-  if (image) {
+  if (image.success) {
     const filePath = path.join(
       CONFIG.files.uploadPath,
       "images",
-      image.uniqueName
+      image.success ? image.data.uniqueName : ""
     );
+
     try {
       await stat(filePath);
     } catch (error) {
@@ -45,6 +41,6 @@ export async function GET(
       },
     });
   } else {
-    return NextResponse.json({ error: "File not found" }, { status: 404 });
+    return NextResponse.json(image.error, { status: 404 });
   }
 }
