@@ -1,57 +1,60 @@
 import db from "@/db";
-import { Genetic, genetics } from "@/db/schema";
+import { genetics } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { Genetic, GeneticIncludes, GeneticInput, Genetics } from "./types";
+import { dbResult } from "./dbResult";
+import { NotFoundError } from "./errors";
+import { AwsDataApiPgDatabase } from "drizzle-orm/aws-data-api/pg";
 
-export type GeneticWithGrowsProps = {
-  id: number;
-};
+export async function getGenetics(
+  includes?: GeneticIncludes
+): Promise<Genetics> {
+  const result = await db.query.genetics.findMany({ with: includes });
 
-export type GeneticWithGrows = Awaited<ReturnType<typeof getGeneticWithGrows>>;
+  if (result.length <= 0) {
+    throw new NotFoundError({
+      entity: "grows",
+    });
+  }
 
-export async function getGeneticWithGrows({ id }: GeneticWithGrowsProps) {
-  const genetic = await db.query.genetics.findFirst({
+  return dbResult(true, result);
+}
+
+export async function getGenetic(
+  id: number,
+  includes?: GeneticIncludes
+): Promise<Genetic> {
+  const result = await db.query.genetics.findFirst({
     where: eq(genetics.id, id),
-    with: {
-      grows: true,
-    },
+    with: includes,
   });
-  return genetic;
+
+  if (!result) {
+    throw new NotFoundError({
+      entity: "genetics",
+      id,
+    });
+  }
+
+  return dbResult(true, result);
 }
 
-export type GeneticsWithGrows = GeneticWithGrows[];
-
-export async function getGeneticsWithGrows({}: GeneticWithGrowsProps): Promise<GeneticsWithGrows> {
-  const genetics: GeneticsWithGrows = await db.query.genetics.findMany({
-    with: { grows: true },
-  });
-  return genetics;
-}
-
-export async function getGenetics(): Promise<Genetic[]> {
-  const genetics: Genetic[] = await db.query.genetics.findMany();
-  return genetics;
-}
-
-export type GeneticInput = {
-  name: string;
-  breeder: string;
-  genus: string;
-  type: string;
-  productPage?: string;
-};
-
-export type GeneticInsertResult = {
-  insertIds: number[];
-  insertData: GeneticInput;
-};
 export async function createGenetic(
-  GeneticData: GeneticInput
-): Promise<GeneticInsertResult> {
-  const result = await db.insert(genetics).values(GeneticData).$returningId();
-  const insertIds: number[] = result.map((entry) => entry.id);
-  const insertData: GeneticInput = GeneticData;
-  return {
-    insertIds,
-    insertData,
-  };
+  input: GeneticInput,
+  includes: GeneticIncludes
+): Promise<Genetic> {
+  const insertId = await db.insert(genetics).values(input).$returningId();
+  const newGenetic = await db.query.genetics.findFirst({
+    where: eq(genetics.id, insertId[0].id),
+    with: includes,
+  });
+
+  if (!newGenetic) {
+    throw new NotFoundError({
+      entity: "grows",
+      id: insertId[0].id,
+    });
+  }
+
+  return dbResult(true, newGenetic);
 }
