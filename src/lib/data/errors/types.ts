@@ -1,7 +1,9 @@
+import { $ZodIssue } from "zod/v4/core";
+
 export type DbErrorOptions = {
   entity?: string;
   id?: number | string;
-  field?: string;
+  issues?: $ZodIssue[];
 };
 
 export type errorData = {
@@ -12,4 +14,5 @@ export type errorData = {
   entity?: string;
   id?: number | string;
   field?: string;
+  issues?: $ZodIssue[];
 };

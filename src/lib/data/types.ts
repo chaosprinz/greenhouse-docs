@@ -21,6 +21,14 @@ export type GeneticIncludes = {
 };
 
 export type GeneticInput = {
+  name?: string;
+  breeder?: string;
+  genus?: string;
+  type?: string;
+  productPage?: string;
+};
+
+export type ValidGeneticInput = {
   name: string;
   breeder: string;
   genus: string;
