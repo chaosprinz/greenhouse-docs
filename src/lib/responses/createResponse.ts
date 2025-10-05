@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { DbError } from "../data";
 import { errorData } from "../data/errors/types";
+import { $ZodIssue } from "zod/v4/core";
 
 export type ApiResponseData<T = unknown> = {
   success: boolean;
@@ -14,6 +14,7 @@ export type ApiResponseData<T = unknown> = {
   error?: errorData;
   msg?: string;
   details?: T;
+  issues?: $ZodIssue[];
 };
 
 export type ResponseProps<T = unknown> = {
@@ -24,6 +25,7 @@ export type ResponseProps<T = unknown> = {
   details?: T;
   msg?: string;
   error?: errorData;
+  issues?: $ZodIssue[];
 };
 
 export function createResponse<T>({
@@ -31,11 +33,13 @@ export function createResponse<T>({
   status,
   data,
   error,
+  issues,
   timestamp,
 }: ResponseProps<T>): NextResponse<ApiResponseData<T>> {
   const responseData: ApiResponseData<T> = {
     success,
     status,
+    issues: issues ?? undefined,
     timestamp: timestamp ? timestamp : Date.now(),
   };
 
@@ -47,5 +51,8 @@ export function createResponse<T>({
     responseData.error = error;
   }
 
+  if (issues) {
+    responseData.issues = issues;
+  }
   return NextResponse.json(responseData, { status });
 }
