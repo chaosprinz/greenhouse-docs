@@ -1,4 +1,3 @@
-import { ZodIssue } from "zod/v3";
 import { DB_ERROR_CODES } from "../DB_ERROR_CODES";
 import { DbError } from "../DbError";
 import { DbErrorOptions } from "../types";

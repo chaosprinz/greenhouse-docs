@@ -1,4 +1,3 @@
-import { DbError, toDbError } from "./errors";
 import { errorData } from "./errors/types";
 import { DbResult } from "./types";
 
