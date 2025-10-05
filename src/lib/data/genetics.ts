@@ -3,8 +3,9 @@ import { genetics } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Genetic, GeneticIncludes, GeneticInput, Genetics } from "./types";
 import { dbResult } from "./dbResult";
-import { NotFoundError } from "./errors";
-import { AwsDataApiPgDatabase } from "drizzle-orm/aws-data-api/pg";
+import { NotFoundError, toDbError } from "./errors";
+import { GeneticSchema } from "./zodSchemas/GeneticSchema";
+import { validateInputFor } from "./validateInputFor";
 
 export async function getGenetics(
   includes?: GeneticIncludes
@@ -43,18 +44,35 @@ export async function createGenetic(
   input: GeneticInput,
   includes?: GeneticIncludes
 ): Promise<Genetic> {
-  const insertId = await db.insert(genetics).values(input).$returningId();
-  const newGenetic = await db.query.genetics.findFirst({
-    where: eq(genetics.id, insertId[0].id),
-    with: includes,
-  });
-
-  if (!newGenetic) {
-    throw new NotFoundError({
-      entity: "grows",
-      id: insertId[0].id,
+  try {
+    const validInput = validateInputFor(GeneticSchema, input, "Genetics");
+    const insertId = await db
+      .insert(genetics)
+      .values({
+        name: validInput.name,
+        breeder: validInput.breeder,
+        genus: validInput.genus,
+        type: validInput.type,
+        productPage: validInput.productPage
+          ? validInput.productPage
+          : undefined,
+      })
+      .$returningId();
+    const newGenetic = await db.query.genetics.findFirst({
+      where: eq(genetics.id, insertId[0].id),
+      with: includes,
     });
-  }
 
-  return dbResult(true, newGenetic);
+    if (!newGenetic) {
+      throw new NotFoundError({
+        entity: "grows",
+        id: insertId[0].id,
+      });
+    }
+
+    return dbResult(true, newGenetic);
+  } catch (err) {
+    const error = toDbError(err);
+    throw error;
+  }
 }
