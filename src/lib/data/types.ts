@@ -17,6 +17,7 @@ import { Grow as GrowSchema, Genetic as GeneticSchema } from "@/db/schema";
  * Includes: are the relating Includes (grows)
  * GeneticRelationMap: obj like { grows?: true}
  * type GeneticWith<Includes extends GeneticIncludes = {}> = withIncludes<GeneticSchema , Includes, GeneticRelationMap>
+ * returns a Genetic including relations as given in Includes
  */
 export type withIncludes<
   Base,
@@ -76,6 +77,10 @@ export type Genetics<Includes extends GeneticIncludes = {}> = DbResult<
   GeneticWith<Includes>[]
 >;
 
+/**
+ * ### GeneticInput
+ * meant as Input for Genetics as generated from formData
+ */
 export type GeneticInput = {
   name?: string;
   breeder?: string;
@@ -84,6 +89,10 @@ export type GeneticInput = {
   productPage?: string;
 };
 
+/**
+ * ### ValidGeneticInput
+ * meant as Input for creating new Genetics in the Database
+ */
 export type ValidGeneticInput = {
   name: string;
   breeder: string;
