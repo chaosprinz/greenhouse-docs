@@ -1,11 +1,14 @@
 import {
   createGenetic,
+  DbError,
   GeneticIncludes,
   GeneticInput,
   toDbError,
+  ValidationError,
 } from "@/lib/data";
 import { NextResponse } from "next/server";
 import { createResponse } from "../createResponse";
+import { $ZodIssue } from "zod/v4/core";
 
 export async function postGeneticResponse(
   geneticData: GeneticInput,
@@ -14,15 +17,25 @@ export async function postGeneticResponse(
   try {
     const genetic = await createGenetic(geneticData, includes);
     return createResponse({
-      success: genetic.success,
-      status: 200,
+      success: true,
       data: genetic,
+      status: 200,
     });
   } catch (err) {
-    return createResponse({
+    const errorData: {
+      success: boolean;
+      status: number;
+      error: DbError;
+      issues: undefined | $ZodIssue[];
+    } = {
       success: false,
       status: 500,
       error: toDbError(err),
-    });
+      issues: undefined,
+    };
+    if (err instanceof ValidationError) {
+      errorData.issues = err.issues ?? undefined;
+    }
+    return createResponse<typeof err>(errorData);
   }
 }
