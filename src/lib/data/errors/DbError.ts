@@ -12,7 +12,6 @@ export abstract class DbError extends Error {
   timestamp: number;
   entity?: string;
   id?: number | string;
-  field?: string;
 
   constructor(message: string, options: DbErrorOptions) {
     super(message);
@@ -20,7 +19,6 @@ export abstract class DbError extends Error {
     this.timestamp = Date.now();
     this.entity = options.entity;
     this.id = options.id;
-    this.field = options.field;
   }
 
   toJSON(): errorData {
@@ -31,7 +29,6 @@ export abstract class DbError extends Error {
       timestamp: this.timestamp,
       entity: this.entity,
       id: this.id,
-      field: this.field,
     } as errorData;
   }
 }
