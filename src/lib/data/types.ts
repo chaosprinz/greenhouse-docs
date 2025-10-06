@@ -87,18 +87,6 @@ export type Genetics<Includes extends GeneticIncludes = {}> = DbResult<
  * meant as Input for Genetics as generated from formData
  */
 export type GeneticInput = {
-  name?: string;
-  breeder?: string;
-  genus?: string;
-  type?: string;
-  productPage?: string;
-};
-
-/**
- * ### ValidGeneticInput
- * meant as Input for creating new Genetics in the Database
- */
-export type ValidGeneticInput = {
   name: string;
   breeder: string;
   genus: string;

@@ -10,8 +10,6 @@ import {
 } from "./types";
 import { dbResult } from "./dbResult";
 import { NotFoundError, toDbError } from "./errors";
-import { GeneticSchema } from "./zodSchemas/GeneticSchema";
-import { validateInputFor } from "./validateInputFor";
 
 export async function getGenetics<Includes extends GeneticIncludes = {}>(
   includes?: Includes
@@ -59,24 +57,29 @@ export async function createGenetic<Includes extends GeneticIncludes>(
   includes?: Includes
 ): Promise<Genetic<Includes>> {
   try {
-    const validInput = validateInputFor(GeneticSchema, input, "Genetics");
+    // an array of {id:number}
     const insertId = await db
       .insert(genetics)
       .values({
-        name: validInput.name,
-        breeder: validInput.breeder,
-        genus: validInput.genus,
-        type: validInput.type,
-        productPage: validInput.productPage
-          ? validInput.productPage
-          : undefined,
+        name: input.name,
+        breeder: input.breeder,
+        genus: input.genus,
+        type: input.type,
+        productPage: input.productPage ? input.productPage : undefined,
       })
       .$returningId();
+
+    /**
+     * we created only one genetic, so insertId only has one element
+     * we take id from this element to fetch the new created genetic
+     * from the database
+     */
     const newGenetic = await db.query.genetics.findFirst({
       where: eq(genetics.id, insertId[0].id),
       with: includes,
     });
 
+    // we throw a NotFoundError when there is no result
     if (!newGenetic) {
       throw new NotFoundError({
         entity: "grows",
@@ -84,11 +87,13 @@ export async function createGenetic<Includes extends GeneticIncludes>(
       });
     }
 
+    //we return a dbResult of our new Genetic
     return dbResult<GeneticWith<Includes>>(
       true,
       newGenetic as unknown as GeneticWith<Includes>
     );
   } catch (err) {
+    //just delegating exceptions to be rethrown as DbError
     const error = toDbError(err);
     throw error;
   }
