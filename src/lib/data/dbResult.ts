@@ -1,8 +1,26 @@
 import { errorData } from "./errors/types";
 import { DbResult } from "./types";
 
-export function dbResult<T>(success: true, data: T): DbResult<T>;
-export function dbResult<T>(success: false, error: errorData): DbResult<T>;
+/**
+ * ## dbResult
+ *
+ * Utility to wrap database-result into a uniform DbResult<T>
+ * Handles both, success and error cases, with full generic inference.
+ */
+
+// ✅ Overload for success
+export function dbResult<T>(
+  success: true,
+  data: T
+): Extract<DbResult<T>, { success: true }>;
+
+// ✅ Overload for error
+export function dbResult<T>(
+  success: false,
+  error: errorData
+): Extract<DbResult<T>, { success: false }>;
+
+// ✅ Implementation
 export function dbResult<T>(
   success: boolean,
   value: T | errorData
@@ -22,6 +40,10 @@ export function dbResult<T>(
   }
 }
 
+/**
+ * ## dbResultFactory<T>
+ * returns a function for creating DbResult<T>
+ */
 export function dbResultFactory<T>() {
   return dbResult<T>;
 }
