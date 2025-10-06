@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createResponse } from "./createResponse";
 import { DbResult, toDbError, ValidationError } from "../data";
 import { ZodSchema } from "zod";
+import { createResponseFromResult } from "./createResponseFromResult";
 
 /**
  * # ResponseFactories
@@ -39,17 +40,7 @@ function createFactory<Args extends any[], T>(
   const factory = async (...args: Args) => {
     try {
       const result = await dataHandler(...args);
-      if (result.success) {
-        return createResponse({
-          success: true,
-          data: result.data,
-        });
-      } else {
-        return createResponse({
-          success: false,
-          error: result.error,
-        });
-      }
+      return createResponseFromResult(result);
     } catch (err) {
       return createResponse({
         success: false,

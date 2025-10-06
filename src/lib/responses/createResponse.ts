@@ -8,7 +8,7 @@ export type ApiResponseData<T = unknown> = {
   timestamp: number;
 
   //success: true
-  data?: T;
+  data?: T; //payload
 
   //success: false
   error?: errorData;
