@@ -1,5 +1,10 @@
 import { errorData } from "./errors/types";
-import { Grow as GrowSchema, Genetic as GeneticSchema } from "@/db/schema";
+import {
+  Grow as GrowSchema,
+  Genetic as GeneticSchema,
+  ImageUpload,
+  Measuring,
+} from "@/db/schema";
 
 /**
  * ## withIncludes<Base, Includes, RelationMap>
@@ -103,20 +108,82 @@ export type ValidGeneticInput = {
 
 /**
  * ## Grows
+ * types with option to include grow-relations
+ * {
+ *  imageUploads?: true,
+ *  genetic?: true,
+ *  measurings?: true
+ *
+ * } look GrowIncludes
  */
 
-export type Grows = DbResult<GrowSchema[]>;
-export type Grow = DbResult<GrowSchema>;
+/**
+ * ### GrowInput
+ * meant as Input creating new Grows in the Database
+ */
+export type GrowInput = {
+  geneticId: number;
+  createdAt?: number;
+};
 
+/**
+ * ### GrowIncludes
+ * options to set grows to include include relations
+ * grow-relations: {
+ *  imageUploads?: true;
+ *  genetic?: true;
+ *  measurings?: true;
+ * }
+ */
 export type GrowIncludes = {
   imageUploads?: true;
   genetic?: true;
   measurings?: true;
 };
 
-export type GrowInput = {
-  geneticId: number;
-  createdAt?: number;
+/**
+ * ### GrowRelationsMap
+ * returns grows with relations holding their type
+ * grows-relation: {
+ *  imageUploads?: ImageUpload[];
+ *  genetic?: GeneticSchema;
+ *  measurings?: Measuring[];
+ * }
+ */
+export type GrowRelationsMap = {
+  imageUploads?: ImageUpload[];
+  genetic?: GeneticSchema;
+  measurings?: Measuring[];
 };
 
-export type GrowCreated = DbResult<GrowSchema>;
+/**
+ * ### GrowWith<Includes>
+ * returns with Grows as they come from the database which
+ * optionally include their relations in Includes
+ * grow-relations: {
+ *  imageUploads?: ImageUpload[];
+ *  genetic?: GeneticSchema;
+ *  measurings?: Measuring[];
+ * }
+ */
+export type GrowWith<Includes extends GrowIncludes = {}> = withIncludes<
+  GrowSchema,
+  Includes,
+  GrowRelationsMap
+>;
+
+/**
+ * ### Grow<Includes>
+ * is a DbResult for GrowWith
+ */
+export type Grow<Includes extends GrowIncludes = {}> = DbResult<
+  GrowWith<Includes>
+>;
+
+/**
+ * ### Grows<Includes>
+ * is a DbResult for a GrowWith-array
+ */
+export type Grows<Includes extends GrowIncludes = {}> = DbResult<
+  GrowWith<Includes>[]
+>;
