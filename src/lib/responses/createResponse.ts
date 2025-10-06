@@ -19,40 +19,28 @@ export type ApiResponseData<T = unknown> = {
 
 export type ResponseProps<T = unknown> = {
   success: boolean;
-  status: number;
-  timestamp?: number;
   data?: T;
-  details?: T;
-  msg?: string;
   error?: errorData;
   issues?: $ZodIssue[];
+  timestamp?: number;
 };
 
-export function createResponse<T>({
+export function createResponse<T = unknown>({
   success,
-  status,
   data,
   error,
   issues,
   timestamp,
 }: ResponseProps<T>): NextResponse<ApiResponseData<T>> {
+  const status: number = success ? 200 : 500;
   const responseData: ApiResponseData<T> = {
     success,
     status,
-    issues: issues ?? undefined,
     timestamp: timestamp ? timestamp : Date.now(),
+    ...(issues && { issues }),
+    ...(data && { data }),
+    ...(error && { error }),
   };
 
-  if (data) {
-    responseData.data = data;
-  }
-
-  if (error) {
-    responseData.error = error;
-  }
-
-  if (issues) {
-    responseData.issues = issues;
-  }
   return NextResponse.json(responseData, { status });
 }
