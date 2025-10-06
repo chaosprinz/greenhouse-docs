@@ -1,16 +1,7 @@
-import Link from "next/link";
-import { getGrowsWithGenetic, GrowWithGenetic } from "@/lib/data/grows";
-
-const GrowItem = (grow: GrowWithGenetic) => {
-  return (
-    <li key={grow.id} className="list-disc">
-      <Link href={`/grows/${grow.id}`}>{grow.genetic?.name}</Link>
-    </li>
-  );
-};
+import { getGrows } from "@/lib/data/grows";
 
 export default async function Grows() {
-  const growsData = await getGrowsWithGenetic();
+  const growsData = await getGrows({ genetic: true });
 
   return (
     <div>
@@ -21,7 +12,6 @@ export default async function Grows() {
       <h2 className="text-xl text-center border-b-2 border-amber-50 mb-4">
         Meine Grows
       </h2>
-      <ul className="pl-6">{growsData.map(GrowItem)}</ul>
     </div>
   );
 }
