@@ -1,12 +1,4 @@
-import db from "@/db";
-import { notFound } from "next/navigation";
+import { getGrowsResponse, postGrowResponse } from "@/lib/responses";
 
-export async function GET(_request: Request) {
-  const result = await db.query.grows.findMany();
-
-  if (!result) {
-    return notFound();
-  }
-
-  return Response.json(result);
-}
+export const GET = getGrowsResponse;
+export const POST = postGrowResponse;
