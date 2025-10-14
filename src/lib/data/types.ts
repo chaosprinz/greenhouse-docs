@@ -1,10 +1,12 @@
+import z from "zod";
 import { errorData } from "./errors/types";
 import {
-  Grow as GrowSchema,
-  Genetic as GeneticSchema,
+  Grow as GrowData,
+  Genetic as GeneticData,
   ImageUpload,
   Measuring,
 } from "@/db/schema";
+import { GrowSchema } from "./zodSchemas/GrowSchema";
 
 /**
  * ## withIncludes<Base, Includes, RelationMap>
@@ -51,7 +53,7 @@ export type GeneticIncludes = {
 };
 
 type GeneticRelationsMap = {
-  grows: GrowSchema[];
+  grows: GrowData[];
 };
 
 /**
@@ -60,7 +62,7 @@ type GeneticRelationsMap = {
  * {grows?: true}
  */
 export type GeneticWith<Includes extends GeneticIncludes = {}> = withIncludes<
-  GeneticSchema,
+  GeneticData,
   Includes,
   GeneticRelationsMap
 >;
@@ -109,10 +111,7 @@ export type GeneticInput = {
  * ### GrowInput
  * meant as Input creating new Grows in the Database
  */
-export type GrowInput = {
-  geneticId: number;
-  createdAt?: number;
-};
+export type GrowInput = z.infer<typeof GrowSchema>;
 
 /**
  * ### GrowIncludes
@@ -140,7 +139,7 @@ export type GrowIncludes = {
  */
 export type GrowRelationsMap = {
   imageUploads?: ImageUpload[];
-  genetic?: GeneticSchema;
+  genetic?: GeneticData;
   measurings?: Measuring[];
 };
 
@@ -155,7 +154,7 @@ export type GrowRelationsMap = {
  * }
  */
 export type GrowWith<Includes extends GrowIncludes = {}> = withIncludes<
-  GrowSchema,
+  GrowData,
   Includes,
   GrowRelationsMap
 >;
