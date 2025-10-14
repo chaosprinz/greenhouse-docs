@@ -9,7 +9,7 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const formData = await req.formData();
 
-  // 🧩 1. Correctly extract "type" and include all fields from GeneticInput
+  // ✅ Correctly extract "type" and include all fields from GeneticInput
   const input: GeneticInput = {
     name: formData.get("name")?.toString() ?? "",
     breeder: formData.get("breeder")?.toString() ?? "",
@@ -18,6 +18,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     productPage: formData.get("productPage")?.toString() || undefined,
   };
 
-  // 🧩 2. Pass input directly — postGeneticResponse handles validation & errors
+  // ✅ Pass input directly — postGeneticResponse handles validation & errors
   return postGeneticResponse(input);
 }
